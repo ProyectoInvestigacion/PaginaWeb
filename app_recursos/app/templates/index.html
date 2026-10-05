@@ -6,11 +6,8 @@
 
 <!-- Contenedor del Video de Presentación -->
 <div class="video-section">
-    <div class="video-wrapper">
-        <video autoplay loop muted playsinline>
-            <source src="{{ url_for('static', filename='img/presentacion.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
+    <div class="video-wrapper" style="height: 60vh; background-color: #ffffff; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+        <img class="img-fluid" style="max-height: 90%; max-width: 90%; object-fit: contain;" src="{{ url_for('static', filename='img/logo_uce2.jpg') }}" alt="Presentación">
     </div>
 </div>
  
@@ -83,7 +80,7 @@
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                 <div class="position-relative h-100">
                     <img class="img-fluid position-absolute w-100 h-100"
-                        src="{{ url_for('static', filename='img/about.jpg') }}" alt="" style="object-fit: cover;">
+                        src="{{ url_for('static', filename='img/logo_uce.png') }}" alt="" style="object-fit: cover;">
                 </div>
             </div>
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
@@ -135,7 +132,7 @@
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="course-item bg-light">
                     <div class="position-relative overflow-hidden">
-                        <img class="img-fluid" src="{{ url_for('static', filename='img/course-1.jpg') }}"
+                        <img class="img-fluid" src="{{ url_for('static', filename='img/logo_uce.png') }}"
                             alt="Recursos de Economía">
                         <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
                             <a href="{{ url_for('app_bp.recursos', section='economia') }}"
@@ -164,7 +161,7 @@
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="course-item bg-light">
                     <div class="position-relative overflow-hidden">
-                        <img class="img-fluid" src="{{ url_for('static', filename='img/course-2.jpg') }}"
+                        <img class="img-fluid" src="{{ url_for('static', filename='img/logo_uce.png') }}"
                             alt="Recursos de Finanzas">
                         <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
                             <a href="{{ url_for('app_bp.recursos', section='finanzas') }}"
@@ -193,7 +190,7 @@
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="course-item bg-light">
                     <div class="position-relative overflow-hidden">
-                        <img class="img-fluid" src="{{ url_for('static', filename='img/course-3.jpg') }}"
+                        <img class="img-fluid" src="{{ url_for('static', filename='img/logo_uce.png') }}"
                             alt="Recursos de Estadística">
                         <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
                             <a href="{{ url_for('app_bp.recursos', section='estadistica') }}"

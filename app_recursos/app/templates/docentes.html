@@ -31,7 +31,7 @@ Docentes - UCE Ciencias Económicas
                 <div class="card bg-light border-0 shadow-sm">
                     <div class="card-body text-center">
                         <img class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;"
-                             src="{% if docente.is_docente and docente.foto_perfil %}{{ docente.foto_perfil }}{% else %}{{ url_for('static', filename='img/default_profile.png') }}{% endif %}"
+                             src="{% if docente.is_docente and docente.foto_perfil %}{{ docente.foto_perfil }}{% else %}{{ url_for('static', filename='img/logo_uce.png') }}{% endif %}"
                              alt="{{ docente.nombre }} {{ docente.apellido }}">
                         <h5 class="card-title">{{ docente.nombre }} {{ docente.apellido }}</h5>
                         <p class="card-text text-secondary">{{ docente.carrera.nombre }}</p>

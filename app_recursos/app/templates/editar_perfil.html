@@ -12,7 +12,7 @@
     <style>
       body {
         font-family: 'Roboto', sans-serif;
-        background: url("{{ url_for('static', filename='img/uce_bg.jpg') }}") 
+        background: url("{{ url_for('static', filename='img/logo_uce.png') }}") 
           no-repeat center center fixed;
         background-size: cover;
       }
@@ -32,7 +32,7 @@
               <img
                 alt="Foto de perfil"
                 class="rounded-full object-cover w-32 h-32"
-                src="{% if perfil.tipo_usuario == 'docente' and perfil.foto_perfil %}{{ perfil.foto_perfil }}{% elif perfil.tipo_usuario == 'estudiante' %}{{ url_for('static', filename='img/' + perfil.carrera.nombre.lower() + '_profile.png') }}{% else %}{{ url_for('static', filename='img/economia_profile.png') }}{% endif %}"
+                src="{% if perfil.tipo_usuario == 'docente' and perfil.foto_perfil %}{{ perfil.foto_perfil }}{% elif perfil.tipo_usuario == 'estudiante' %}{{ url_for('static', filename='img/' + perfil.carrera.nombre.lower() + '_profile.png') }}{% else %}{{ url_for('static', filename='img/logo_uce.png') }}{% endif %}"
               />
             </div>
             {% if perfil.tipo_usuario == 'docente' %}
@@ -107,7 +107,7 @@
         <div class="text-center">
           <img
             class="w-24 h-24 mb-4"
-            src="{{ url_for('static', filename='img/logo_fce.png') }}"
+            src="{{ url_for('static', filename='img/logo_uce.png') }}"
             alt="Logo de la Facultad"
           />
           <h2 class="text-2xl font-bold mb-2">Usuario: {{ perfil.tipo_usuario }}</h2>

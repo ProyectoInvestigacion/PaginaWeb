@@ -6,8 +6,6 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     gcc \
     curl \
-    postgresql-client \
-    redis-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # Establece el directorio de trabajo en /app
@@ -28,7 +26,8 @@ EXPOSE 5000
 # Establece las variables de entorno
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=run.py
-ENV FLASK_ENV=development
+ENV FLASK_ENV=production
+ENV FLASK_DEBUG=0
 
 # Copiar y dar permisos al script de entrada
 COPY docker-entrypoint.sh /usr/local/bin/
