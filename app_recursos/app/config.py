@@ -10,15 +10,20 @@ load_dotenv(os.path.join(basedir, '.env'))
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
     WTF_CSRF_ENABLED = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
-    # Configuración de Redis para sesiones
-    SESSION_TYPE = os.getenv('SESSION_TYPE', 'redis')
-    SESSION_REDIS = Redis.from_url(os.getenv('SESSION_REDIS', 'redis://localhost:6379/0'))
+    # Configuración de Sesiones (Fallback a filesystem si no hay Redis configurado)
+    redis_url = os.getenv('SESSION_REDIS')
+    if redis_url:
+        SESSION_TYPE = 'redis'
+        SESSION_REDIS = Redis.from_url(redis_url)
+    else:
+        SESSION_TYPE = 'filesystem'
+        
     SESSION_USE_SIGNER = True  # Asegura las cookies de sesión
     SESSION_PERMANENT = False  # Las sesiones no son permanentes
-    SESSION_KEY_PREFIX = 'session:'  # Prefijo en Redis para las claves de sesión
+    SESSION_KEY_PREFIX = 'session:'  # Prefijo para las claves de sesión
     PERMANENT_SESSION_LIFETIME = int(os.getenv('SESSION_EXPIRATION', 7200))  # Expiración de la sesión (2 horas)
     
     # Actualización de cookies de sesión para evitar problemas de caching en el navegador
