@@ -1,0 +1,25 @@
+INSTRUCCIONES DE DESCARGA Y DESPLIEGUE (VERSIÓN ESTÁTICA)
+
+Siga estos pasos para descargar el proyecto en su equipo local o desplegarlo en producción. 
+Esta versión ha sido optimizada y ya no requiere Docker, bases de datos ni configuraciones complejas.
+
+1. DESCARGAR EL PROYECTO
+Abra su terminal (o línea de comandos) y descargue el repositorio. Luego, ingrese a la carpeta del proyecto:
+git clone git@github.com:ProyectoInvestigacion/PaginaWeb.git
+cd PaginaWeb
+
+2. EJECUCIÓN LOCAL (PRUEBAS)
+No necesita compilar nada. Para ver la página en su computadora, simplemente abra una terminal en esta carpeta y ejecute:
+python -m http.server 8000
+
+Luego abra su navegador en: http://localhost:8000/
+(Alternativamente, puede usar la extensión "Live Server" de VS Code abriendo el archivo index.html).
+
+3. DESPLIEGUE EN PRODUCCIÓN (VERCEL / GITHUB PAGES)
+El código está 100% listo para ser desplegado.
+- Suba los cambios a su repositorio de GitHub (git add . / git commit -m "update" / git push).
+- Vaya a Vercel (vercel.com), inicie sesión y haga clic en "Import Project".
+- Seleccione su repositorio.
+- Presione "Deploy". No necesita configurar ninguna variable de entorno ni comandos de compilación.
+
+¡Eso es todo! Su página web estará en línea en cuestión de segundos.
