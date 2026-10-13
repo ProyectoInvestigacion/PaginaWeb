@@ -12,6 +12,13 @@ La aplicación ha sido desarrollada utilizando tecnologías web estándar (HTML5
 - **Hosting Gratuito:** 100% compatible con plataformas de despliegue estático como Vercel, Netlify o GitHub Pages.
 - **Responsive Design:** Interfaces fluidas que se adaptan a móviles, tablets y escritorios.
 
+## Decisiones técnicas
+
+- **Sin jQuery ni plugins:** `static/js/main.js` es JavaScript nativo (animaciones con `IntersectionObserver`, carrusel con Bootstrap). Las carpetas `static/lib/*` nunca existieron en el repo y su ausencia rompía el JS.
+- **Sin frameworks ni build:** para un sitio informativo estático, React/Next/Tailwind/npm añadirían complejidad sin beneficio.
+- **Vercel:** `vercel.json` define cabeceras de seguridad y caché de `/static`. `404.html` y `robots.txt` incluidos.
+- `syllabus_economia.html` y `subir_recursos.html` aún cargan jQuery por scripts inline heredados del backend eliminado; son candidatos a retirarse.
+
 ---
 
 ## 💻 Desarrollo Local

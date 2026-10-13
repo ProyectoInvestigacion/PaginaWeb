@@ -1,134 +1,105 @@
-(function ($) {
+(function () {
     "use strict";
 
-    // Spinner
-    var spinner = function () {
-        setTimeout(function () {
-            if ($('#spinner').length > 0) {
-                $('#spinner').removeClass('show');
-            }
-        }, 1);
+    var ready = function (fn) {
+        if (document.readyState !== "loading") fn();
+        else document.addEventListener("DOMContentLoaded", fn);
     };
-    spinner();
 
+    ready(function () {
 
-    // Initiate the wowjs
-    new WOW().init();
-
-
-    // Sticky Navbar
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            $('.sticky-top').css('top', '0px');
-        } else {
-            $('.sticky-top').css('top', '-100px');
+        // Spinner
+        var spinner = document.getElementById("spinner");
+        if (spinner) {
+            setTimeout(function () { spinner.classList.remove("show"); }, 1);
         }
-    });
 
 
-    // Dropdown on mouse hover
-    const $dropdown = $(".dropdown");
-    const $dropdownToggle = $(".dropdown-toggle");
-    const $dropdownMenu = $(".dropdown-menu");
-    const showClass = "show";
-
-    $(window).on("load resize", function () {
-        if (this.matchMedia("(min-width: 992px)").matches) {
-            $dropdown.hover(
-                function () {
-                    const $this = $(this);
-                    $this.addClass(showClass);
-                    $this.find($dropdownToggle).attr("aria-expanded", "true");
-                    $this.find($dropdownMenu).addClass(showClass);
-                },
-                function () {
-                    const $this = $(this);
-                    $this.removeClass(showClass);
-                    $this.find($dropdownToggle).attr("aria-expanded", "false");
-                    $this.find($dropdownMenu).removeClass(showClass);
-                }
-            );
-        } else {
-            $dropdown.off("mouseenter mouseleave");
+        // Animaciones de entrada (reemplazo de WOW.js con IntersectionObserver)
+        var reveals = document.querySelectorAll(".wow");
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if ("IntersectionObserver" in window && !reduceMotion) {
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) return;
+                    var el = entry.target;
+                    var delay = el.getAttribute("data-wow-delay");
+                    if (delay) el.style.animationDelay = delay;
+                    el.classList.add("is-visible");
+                    observer.unobserve(el);
+                });
+            }, { threshold: 0.1 });
+            reveals.forEach(function (el) {
+                el.classList.add("reveal-pending");
+                observer.observe(el);
+            });
         }
-    });
 
 
-    // Back to top button
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 300) {
-            $('.back-to-top').fadeIn('slow');
-        } else {
-            $('.back-to-top').fadeOut('slow');
-        }
-    });
-    $('.back-to-top').click(function () {
-        $('html, body').animate({ scrollTop: 0 }, 1500, 'easeInOutExpo');
-        return false;
-    });
-
-
-    // Header carousel
-    $(".header-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1500,
-        items: 1,
-        dots: false,
-        loop: true,
-        nav: true,
-        navText: [
-            '<i class="bi bi-chevron-left"></i>',
-            '<i class="bi bi-chevron-right"></i>'
-        ]
-    });
-
-
-    // Testimonials carousel
-    $(".testimonial-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1000,
-        center: true,
-        margin: 24,
-        dots: true,
-        loop: true,
-        nav: false,
-        responsive: {
-            0: {
-                items: 1
-            },
-            768: {
-                items: 2
-            },
-            992: {
-                items: 3
+        // Sticky Navbar y botón "volver arriba"
+        var stickyEls = document.querySelectorAll(".sticky-top");
+        var backToTop = document.querySelector(".back-to-top");
+        var ticking = false;
+        var onScroll = function () {
+            var scrolled = window.pageYOffset > 300;
+            stickyEls.forEach(function (el) { el.style.top = scrolled ? "0px" : "-100px"; });
+            if (backToTop) backToTop.classList.toggle("show", scrolled);
+            ticking = false;
+        };
+        window.addEventListener("scroll", function () {
+            if (!ticking) {
+                window.requestAnimationFrame(onScroll);
+                ticking = true;
             }
-        }
-    });
+        }, { passive: true });
 
-    // Script para cerrar submenús cuando se abre otro
-    window.closeOtherMenus = function (currentMenu) {
-        const menus = ['economiaAlgebraLineal', 'economiaMatematicaBasica', 'economiaMatematicaI', 'economiaMatematicaII', 'finanzasMatematicaBasica', 'finanzasCalculoDiferencial', 'finanzasCalculoIntegral', 'estadisticaCalculoI', 'estadisticaCalculoII', 'estadisticaCalculoIII', 'estadisticaAlgebraLineal', 'estadisticaEcuacionesDiferenciales'];
-        menus.forEach(menu => {
-            const element = document.getElementById(menu);
-            if (element && menu !== currentMenu && element.classList.contains('show')) {
-                new bootstrap.Collapse(element).hide();
-            }
+        if (backToTop) {
+            backToTop.addEventListener("click", function (e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+            });
+        }
+
+
+        // Dropdown al pasar el mouse (solo escritorio)
+        var desktop = window.matchMedia("(min-width: 992px)");
+        var showClass = "show";
+        document.querySelectorAll(".dropdown").forEach(function (dropdown) {
+            var toggle = dropdown.querySelector(".dropdown-toggle");
+            var menu = dropdown.querySelector(".dropdown-menu");
+            var setState = function (open) {
+                dropdown.classList.toggle(showClass, open);
+                if (menu) menu.classList.toggle(showClass, open);
+                if (toggle) toggle.setAttribute("aria-expanded", open ? "true" : "false");
+            };
+            dropdown.addEventListener("mouseenter", function () { if (desktop.matches) setState(true); });
+            dropdown.addEventListener("mouseleave", function () { if (desktop.matches) setState(false); });
         });
-    }
-
-    // Reloj en tiempo real
-    function updateClock() {
-        var now = new Date();
-        var hours = now.getHours().toString().padStart(2, '0');
-        var minutes = now.getMinutes().toString().padStart(2, '0');
-        var seconds = now.getSeconds().toString().padStart(2, '0');
-        document.getElementById('clock').textContent = hours + ' : ' + minutes + ' : ' + seconds;
-    }
-    setInterval(updateClock, 1000);
-    updateClock(); // llamada inicial para mostrar el reloj inmediatamente
 
 
+        // Cerrar submenús cuando se abre otro
+        window.closeOtherMenus = function (currentMenu) {
+            var menus = ['economiaAlgebraLineal', 'economiaMatematicaBasica', 'economiaMatematicaI', 'economiaMatematicaII', 'finanzasMatematicaBasica', 'finanzasCalculoDiferencial', 'finanzasCalculoIntegral', 'estadisticaCalculoI', 'estadisticaCalculoII', 'estadisticaCalculoIII', 'estadisticaAlgebraLineal', 'estadisticaEcuacionesDiferenciales'];
+            menus.forEach(function (menu) {
+                var element = document.getElementById(menu);
+                if (element && menu !== currentMenu && element.classList.contains('show') && window.bootstrap) {
+                    new bootstrap.Collapse(element).hide();
+                }
+            });
+        };
 
-})(jQuery);
 
+        // Reloj en tiempo real (solo si la página lo incluye)
+        var clock = document.getElementById("clock");
+        if (clock) {
+            var pad = function (n) { return String(n).padStart(2, "0"); };
+            var updateClock = function () {
+                var now = new Date();
+                clock.textContent = pad(now.getHours()) + " : " + pad(now.getMinutes()) + " : " + pad(now.getSeconds());
+            };
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
 
+    });
+})();
