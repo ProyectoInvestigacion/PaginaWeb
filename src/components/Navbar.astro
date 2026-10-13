@@ -1,0 +1,16 @@
+---
+// El menú vive en navbar.html (HTML puro, ~300 líneas de acordeones anidados).
+// Aquí solo se marca como activo el enlace de la página actual.
+import navRaw from './navbar.html?raw';
+
+const path = Astro.url.pathname.replace(/\/index\.html$/, '/');
+const nav = navRaw.replace(
+  /<a href="([^"]+)" class="nav-item nav-link">/g,
+  (match, href) =>
+    href === path || (href === '/' && path === '/')
+      ? `<a href="${href}" class="nav-item nav-link active" aria-current="page">`
+      : match,
+);
+---
+
+<Fragment set:html={nav} />

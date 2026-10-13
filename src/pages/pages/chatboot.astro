@@ -1,0 +1,64 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Asistente virtual">
+<!-- Header Start -->
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">Chatbots Educativos</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- Section Title for Chatbots by Carrera and Materia -->
+    <div class="container text-center py-3">
+        <h2 class="display-5 text-primary mb-2">
+            Todas las Carreras
+        </h2>
+        <h4 class="text-secondary mb-4">
+            Todas las Materias
+        </h4>
+    </div>
+
+    <!-- Section for Filters -->
+    <div class="container mb-4">
+        <form id="filtro-chatbot" method="GET" action="chatboot.html">
+            <div class="row g-2 align-items-center">
+                <!-- Filter for Career -->
+                <div class="col-md-5">
+                    <label for="filtro-carrera" class="form-label">Carrera:</label>
+                    <select class="form-select" id="filtro-carrera" name="carrera" onchange="this.form.submit()">
+                        <option value="" selected disabled>Selecciona una carrera</option>
+
+                    </select>
+                </div>
+                <!-- Filter for Subject -->
+                <div class="col-md-5">
+                    <label for="filtro-materia" class="form-label">Materia:</label>
+                    <select class="form-select" id="filtro-materia" name="materia" onchange="this.form.submit()">
+                        <option value="" selected disabled>Selecciona una materia</option>
+
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Section for Chatbot Cards -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-4">
+
+                    <div class="col-lg-12 text-center">
+                        <p class="text-secondary">No hay chatbots disponibles para los filtros seleccionados.</p>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</Layout>

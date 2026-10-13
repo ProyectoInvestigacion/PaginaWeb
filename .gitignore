@@ -341,3 +341,6 @@ id_rsa.pub
 !.gitignore
 !.dockerignore
 
+
+# Astro
+.astro/
