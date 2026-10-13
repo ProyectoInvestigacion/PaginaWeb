@@ -1,0 +1,52 @@
+/* Mejoras de UI sin dependencias externas.
+   Reemplaza WOW.js + animate.css (animaciones de entrada) y define el botón "volver arriba". */
+
+/* --- Animaciones de entrada --- */
+.reveal-pending { opacity: 0; }
+.reveal-pending.is-visible { animation: fadeIn .8s ease both; opacity: 1; }
+.reveal-pending.fadeInUp.is-visible { animation-name: fadeInUp; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translate3d(0, 40px, 0); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .reveal-pending { opacity: 1; animation: none !important; }
+}
+
+/* --- Botón volver arriba --- */
+.btn-lg-square { width: 48px; height: 48px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.back-to-top {
+    position: fixed; right: 30px; bottom: 30px; z-index: 99;
+    opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: opacity .3s ease, transform .3s ease, visibility 0s linear .3s;
+}
+.back-to-top.show { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+
+/* --- Adaptabilidad a distintos dispositivos --- */
+/* Los medios nunca desbordan su contenedor */
+img, video, iframe { max-width: 100%; }
+
+/* Videos incrustados (width/height fijos en el HTML): se escalan manteniendo 16:9 */
+iframe[width] { height: auto; aspect-ratio: 16 / 9; }
+
+/* Evita overflow horizontal por palabras/URLs largas */
+body { overflow-x: hidden; overflow-wrap: break-word; }
+
+/* Hero: sin franjas negras; la altura la define el carrusel */
+.video-section { height: auto; background-color: transparent; }
+
+/* Tablas anchas con scroll propio en pantallas pequeñas */
+table { max-width: 100%; }
+
+@media (max-width: 991.98px) {
+    /* Menú desplegado en móvil/tablet: scroll interno si no cabe en pantalla */
+    .navbar-collapse { max-height: calc(100vh - 80px); overflow-y: auto; }
+    /* Objetivos táctiles de al menos ~44px */
+    .navbar .nav-link, .navbar .accordion-button { min-height: 44px; display: flex; align-items: center; }
+    .navbar-light .navbar-nav .nav-link::after { left: 0; transform: none; bottom: 6px; }
+}
+
+@media (max-width: 575.98px) {
+    .back-to-top { right: 16px; bottom: 16px; }
+    .display-3 { font-size: 2.25rem; }
+    .footer .time span, .footer #clock { font-size: 1.5rem !important; }
+}
+
