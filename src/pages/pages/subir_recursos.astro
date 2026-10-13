@@ -1,0 +1,153 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Subir recursos">
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Subir Recursos</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Mensaje y botones para añadir recursos -->
+
+<!-- Lista de recursos para docentes -->
+
+<script is:inline>
+    $(document).ready(function() {
+        // Al hacer clic en "Guardar Cambios" en cualquier modal de edición
+        $("form[id^='editLinkForm'], form[id^='editFileForm'], form[id^='editVideoForm']").on('submit', function(event) {
+            event.preventDefault();  // Prevenir la recarga de la página
+
+            // Recoger el formulario específico enviado
+            const form = $(this);
+            const actionUrl = form.attr('action');  // URL para la acción del formulario
+            const formData = form.serialize();  // Serializar los datos del formulario
+
+            // Enviar la solicitud AJAX
+            $.ajax({
+                type: "POST",
+                url: actionUrl,
+                data: formData,
+                success: function(response) {
+                    if (response.recurso) {
+                        // Mostrar un mensaje de éxito
+                        alert("Cambios realizados correctamente.");
+
+                        // Actualizar la fila del recurso con los nuevos valores sin recargar la página
+                        const recursoId = response.recurso.id;
+                        const recursoRow = $(`#recurso-${recursoId}`);
+                        recursoRow.find('.recurso-title').text(response.recurso.title);
+                        recursoRow.find('.recurso-description').text(response.recurso.description);
+
+                        // Para los enlaces externos, verifica si está presente y actualiza
+                        if (response.recurso.external_link) {
+                            recursoRow.find('.recurso-link').attr('href', response.recurso.external_link);
+                        }
+
+                        // Cerrar el modal de edición
+                        form.closest('.modal').modal('hide');
+                    } else if (response.error) {
+                        // Mostrar los errores devueltos
+                        alert("Ocurrió un error: " + JSON.stringify(response.error));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Manejo de errores
+                    alert("Ocurrió un error al actualizar el recurso. Por favor, intenta nuevamente.");
+                }
+            });
+        });
+    });
+</script>
+
+<script is:inline>
+    function eliminarRecurso(recursoId) {
+        const form = $(`#deleteForm-${recursoId}`);
+        const actionUrl = form.attr('action');
+        const formData = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: formData,
+            success: function(response) {
+                if (response.message) {
+                    alert("Recurso eliminado correctamente.");
+                    $(`#recurso-${recursoId}`).remove();
+                } else if (response.error) {
+                    alert("Error: " + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("Ocurrió un error al eliminar el recurso.");
+            }
+        });
+    }
+</script>
+
+<script is:inline>
+    function confirmarEliminacion(recursoId) {
+        if (confirm("¿Estás seguro que deseas eliminar el recurso?")) {
+            fetch(`/eliminar-recurso/${recursoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': 'dummy'  // Asegúrate de incluir el token CSRF si lo estás usando.
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("La eliminación del recurso fue exitosa");
+                    // Remover la fila del recurso eliminado
+                    document.getElementById(`recurso-${recursoId}`).remove();
+                } else {
+                    response.json().then(data => {
+                        alert(`Error: ${data.error}`);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error al eliminar el recurso:', error);
+                alert('Ocurrió un error al eliminar el recurso.');
+            });
+        }
+    }
+</script>
+
+<script is:inline>
+    function mostrarRecursos(tipo) {
+        // Ocultar todos los recursos
+        document.querySelectorAll('[data-resource-type]').forEach(function(row) {
+            row.style.display = 'none';
+        });
+
+        // Mostrar solo los recursos del tipo seleccionado
+        document.querySelectorAll(`[data-resource-type="${tipo}"]`).forEach(function(row) {
+            row.style.display = 'table-row';
+        });
+
+        if (tipo === 'chatbot') {
+            document.querySelectorAll('[data-category="Chatbot"]').forEach(function(row) {
+                row.style.display = 'table-row';
+            });
+        } else {
+            document.querySelectorAll(`[data-resource-type="${tipo}"]`).forEach(function(row) {
+                row.style.display = 'table-row';
+            });
+        }
+    }
+
+</script>
+
+  <Fragment slot="scripts">
+<script is:inline src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  </Fragment>
+</Layout>

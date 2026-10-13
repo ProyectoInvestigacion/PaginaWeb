@@ -14,26 +14,31 @@ La aplicación ha sido desarrollada utilizando tecnologías web estándar (HTML5
 
 ## Decisiones técnicas
 
-- **Sin jQuery ni plugins:** `static/js/main.js` es JavaScript nativo (animaciones con `IntersectionObserver`, carrusel con Bootstrap). Las carpetas `static/lib/*` nunca existieron en el repo y su ausencia rompía el JS.
-- **Sin frameworks ni build:** para un sitio informativo estático, React/Next/Tailwind/npm añadirían complejidad sin beneficio.
-- **Vercel:** `vercel.json` define cabeceras de seguridad y caché de `/static`. `404.html` y `robots.txt` incluidos.
-- `syllabus_economia.html` y `subir_recursos.html` aún cargan jQuery por scripts inline heredados del backend eliminado; son candidatos a retirarse.
+- **Astro (SSG):** el sitio se genera con [Astro](https://astro.build) a HTML estático, sin JavaScript de framework en el navegador. El menú, el footer y el `<head>` viven una sola vez (antes estaban copiados en 15 archivos). Las URLs `.html` se conservan (`build.format: 'file'`).
+- **Sin Next.js/React/Tailwind:** para un sitio informativo estático no aportan beneficio.
+- **Sin jQuery ni plugins:** `public/static/js/main.js` es JavaScript nativo (animaciones con `IntersectionObserver`, carrusel con Bootstrap). Las carpetas `static/lib/*` nunca existieron en el repo.
+- **Vercel:** `vercel.json` compila con Astro y define cabeceras de seguridad y caché de `/static`.
+- `syllabus_economia` y `subir_recursos` aún dependen de jQuery y de endpoints de un backend eliminado; son candidatas a retirarse.
+- `public/pages/` (login, registro, forgotpass, admin_dashboard) son páginas heredadas del backend, servidas tal cual.
 
 ---
 
 ## 💻 Desarrollo Local
 
-Para visualizar y editar la página en tu propia computadora no necesitas instalar bases de datos complejas. 
+Requiere [Node.js](https://nodejs.org) 18 o superior.
 
-**Opción 1: Servidor Python (Recomendado)**
-Si tienes Python instalado, abre una terminal en la carpeta del proyecto y ejecuta:
 ```bash
-python -m http.server 8000
+npm install        # una sola vez
+npm run dev        # servidor en http://localhost:4321 con recarga automática
+npm run build      # genera el sitio estático en dist/
+npm run preview    # sirve dist/ para comprobar el resultado final
 ```
-Luego abre en tu navegador: `http://localhost:8000`
 
-**Opción 2: VS Code Live Server**
-Si usas Visual Studio Code, instala la extensión "Live Server", haz clic derecho sobre `index.html` y selecciona "Open with Live Server".
+**Cómo editar:**
+- Contenido de una página: `src/pages/` (`index.astro` y `src/pages/pages/*.astro`).
+- Menú de navegación: `src/components/navbar.html` (la página activa se marca sola).
+- Footer: `src/components/Footer.astro`. Estructura común (head, scripts): `src/layouts/Layout.astro`.
+- Imágenes, CSS y JS: `public/static/`.
 
 ---
 
@@ -70,19 +75,14 @@ Vercel es la plataforma recomendada para alojar este proyecto debido a su veloci
 
 ## 📂 Estructura de Archivos Principal
 
-- `index.html` - Página de inicio (Home principal).
-- `/pages/` - Vistas y páginas secundarias del portal:
-  - `/pages/docentes.html` - Directorio y perfiles docentes.
-  - `/pages/recursos.html` - Biblioteca y repositorio de recursos.
-  - `/pages/herramientas.html` - Herramientas interactivas y utilidades.
-  - `/pages/chatboot.html` - Asistente virtual y chat.
-  - `/pages/login.html` & `/pages/registro.html` - Acceso y autenticación.
-  - `/pages/admin_dashboard.html` - Panel administrativo.
-  - Vistas académicas (videos, ejercicios, exámenes, aplicaciones y bibliografía por materia).
-- `/docs/` - Documentación y guías del proyecto:
-  - `GIT_INSTRUCCIONES.txt` - Guía de descarga, control de versiones y despliegue.
-- `/static/` - Carpeta que contiene todos los recursos visuales y de código:
-  - `/static/css/` - Hojas de estilo y personalizaciones (Bootstrap, glassmorphism, estilos propios).
-  - `/static/js/` - Scripts de interactividad, reloj y animaciones.
-  - `/static/img/` - Imágenes y logos institucionales.
-  - `/static/scss/` - Fuentes y personalizaciones SCSS de Bootstrap.
+- `src/` - Código fuente del sitio (Astro):
+  - `src/layouts/Layout.astro` - Estructura común: head/SEO, spinner, scripts.
+  - `src/components/` - `navbar.html` (menú) y `Footer.astro`.
+  - `src/pages/index.astro` - Página de inicio.
+  - `src/pages/pages/*.astro` - Docentes, recursos, herramientas, chatbot y vistas académicas (videos, ejercicios, exámenes, aplicaciones, bibliografía).
+- `public/` - Archivos servidos tal cual:
+  - `public/static/css|js|img|scss/` - Estilos, scripts, imágenes y fuentes SCSS.
+  - `public/pages/` - login, registro, forgotpass y admin_dashboard (heredadas).
+  - `public/404.html` y `public/robots.txt`.
+- `/docs/` - Documentación y guías del proyecto (`GIT_INSTRUCCIONES.txt`).
+- `dist/` - Resultado de `npm run build` (no se versiona).
